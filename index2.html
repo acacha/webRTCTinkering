@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Example 2</title>
+</head>
+<body>
+
+<video autoplay id="screenshot-video"></video>
+<img src="" id="screenshot-img">
+<canvas style="display:none;"></canvas>
+<button id="screenshot-button">Screenshoot</button>
+
+<script>
+  const button = document.querySelector('#screenshot-button');
+  const img = document.querySelector('#screenshot-img');
+  const video = document.querySelector('#screenshot-video');
+
+  const canvas = document.createElement('canvas');
+
+  button.onclick = video.onclick = function() {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0);
+    // Other browsers will fall back to image/png
+    img.src = canvas.toDataURL('image/webp');
+  };
+
+  function handleSuccess(stream) {
+    video.srcObject = stream;
+  }
+
+  function handleError(error) {
+    console.error('Reeeejected!', error);
+  }
+
+  const constraints = {
+    video: true
+  };
+
+  navigator.mediaDevices.getUserMedia(constraints).
+  then(handleSuccess).catch(handleError);
+</script>
+</body>
+</html>
